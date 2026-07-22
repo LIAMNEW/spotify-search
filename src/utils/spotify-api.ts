@@ -22,6 +22,6 @@ export async function searchSpotify(
   limit = 20
 ): Promise<SearchResults> {
   const types = type === 'both' ? 'track,artist' : type;
-  const params = new URLSearchParams({ q: query, type: types, limit: String(limit) });
-  return fetchApi<SearchResults>(`/search?${params}`, token);
+  const params = new URLSearchParams({ q: query, limit: String(limit) });
+  return fetchApi<SearchResults>(`/search?${params}&type=${types}`, token);
 }
