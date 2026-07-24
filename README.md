@@ -15,8 +15,12 @@ Search for your favourite artists and tracks using the Spotify Web API. Real-tim
 
 1. Go to [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)
 2. Click **Create app**, fill in a name and description
-3. Under **Redirect URIs**, add `http://localhost:5173` and save
+3. Under **Redirect URIs**, add the URL where you'll run the app and save:
+   - Local dev: `http://localhost:5173`
+   - Deployed (e.g. Netlify): `https://your-site.netlify.app`
 4. Copy your **Client ID** from the app overview
+
+> The redirect URI must match **exactly** — no trailing slash, correct protocol (http vs https).
 
 ### 2. Run locally
 

@@ -48,6 +48,12 @@ export async function exchangeCodeForToken(
   clientId: string
 ): Promise<TokenResponse> {
   const verifier = sessionStorage.getItem(VERIFIER_KEY);
+
+  console.log('[auth] verifier in sessionStorage:', verifier !== null, '| length:', verifier?.length ?? 0);
+  console.log('[auth] code length:', code.length);
+  console.log('[auth] clientId:', clientId.slice(0, 8) + '...');
+  console.log('[auth] redirect_uri:', window.location.origin);
+
   if (!verifier) throw new Error('No code verifier found — please try signing in again.');
 
   const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -62,11 +68,16 @@ export async function exchangeCodeForToken(
     }),
   });
 
+  console.log('[auth] token exchange status:', response.status);
+
   if (!response.ok) {
-    const err = (await response.json().catch(() => ({}))) as { error_description?: string };
-    throw new Error(err.error_description ?? 'Failed to authenticate with Spotify');
+    const err = (await response.json().catch(() => ({}))) as { error?: string; error_description?: string };
+    console.error('[auth] exchange error body:', err);
+    throw new Error(err.error_description ?? err.error ?? 'Failed to authenticate with Spotify');
   }
 
   sessionStorage.removeItem(VERIFIER_KEY);
-  return response.json() as Promise<TokenResponse>;
+  const data = await response.json() as TokenResponse;
+  console.log('[auth] access_token received:', !!data.access_token, '| expires_in:', data.expires_in);
+  return data;
 }

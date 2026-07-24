@@ -15,7 +15,8 @@ interface Props {
 export function TrackCard({ track, index }: Props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const image = track.album.images.at(-1)?.url;
+  const images = track.album.images;
+  const image = images[images.length - 1]?.url;
 
   useEffect(() => {
     return () => { audioRef.current?.pause(); };
